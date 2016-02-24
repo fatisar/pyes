@@ -93,6 +93,7 @@ class ElasticSearchModel(DotDict):
         conn = meta['connection']
         res = conn.get(meta.index, meta.type, meta["id"])
         self.update(res)
+        self._meta = res._meta
 
 
     def get_id(self):

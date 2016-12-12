@@ -522,14 +522,24 @@ class MatchAllFilter(Filter):
 
 class HasFilter(Filter):
 
-    def __init__(self, type, query, _scope=None, **kwargs):
+    def __init__(self, type, query=None, filter=None, _scope=None, **kwargs):
+        assert query is not None or filter is not None
+
         super(HasFilter, self).__init__(**kwargs)
         self.query = query
+        self.filter = filter
         self.type = type
         self._scope = _scope
 
     def _serialize(self):
-        data = {"query": self.query.serialize(), "type": self.type}
+        data = {"type": self.type}
+
+        if self.query is not None:
+            data['query'] = self.query.serialize()
+
+        if self.filter is not None:
+            data['filter'] = self.filter.serialize()
+
         if self._scope is not None:
             data["_scope"] = self._scope
         return data

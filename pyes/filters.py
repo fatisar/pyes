@@ -522,13 +522,16 @@ class MatchAllFilter(Filter):
 
 class HasFilter(Filter):
 
-    def __init__(self, type, query=None, filter=None, _scope=None, **kwargs):
+    def __init__(self, type, query=None, filter=None, _scope=None, min_children=None, max_children=None, inner_hits=None, **kwargs):
         assert query is not None or filter is not None
 
         super(HasFilter, self).__init__(**kwargs)
         self.query = query
         self.filter = filter
         self.type = type
+        self.min_children = min_children
+        self.max_children = max_children
+        self.inner_hits = inner_hits
         self._scope = _scope
 
     def _serialize(self):
@@ -540,8 +543,18 @@ class HasFilter(Filter):
         if self.filter is not None:
             data['filter'] = self.filter.serialize()
 
+        if self.min_children is not None:
+            data['min_children'] = self.min_children
+
+        if self.max_children is not None:
+            data['max_children'] = self.max_children
+
+        if self.inner_hits is not None:
+            data['inner_hits'] = self.inner_hits.serialize()
+
         if self._scope is not None:
             data["_scope"] = self._scope
+
         return data
 
 

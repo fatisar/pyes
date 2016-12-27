@@ -182,8 +182,8 @@ class Search(EqualityComparableUsingAttributeDictionary):
     results = conn.search(s)
     """
 
-    def __init__(self, query=None, filter=None, fields=None, start=None,
-                 size=None, highlight=None, sort=None, explain=False, facet=None, agg=None, rescore=None,
+    def __init__(self, query=None, filter=None, fields=None,
+                 start=None, size=None, highlight=None, sort=None, explain=False, facet=None, agg=None, rescore=None,
                  window_size=None, version=None, track_scores=None, script_fields=None, index_boost=None,
                  min_score=None, stats=None, bulk_read=None, partial_fields=None, _source=None, timeout=None):
         """
@@ -327,6 +327,32 @@ class Search(EqualityComparableUsingAttributeDictionary):
     def __repr__(self):
         return str(self.serialize())
 
+
+class InnerHits(object):
+    _internal_name = 'inner_hits'
+
+    def __init__(self, **options):
+        self._size = options.get('size')
+        self._from = options.get('from')
+        self._name = options.get('name')
+        self._sort = options.get('sort')
+
+    def serialize(self):
+        serialized = dict()
+
+        if self._size is not None:
+            serialized['size'] = self._size
+
+        if self._from is not None:
+            serialized['from'] = self._from
+
+        if self._name is not None:
+            serialized['name'] = self._name
+
+        if self._sort is not None:
+            serialized['sort'] = self._sort
+
+        return serialized
 
 class Query(EqualityComparableUsingAttributeDictionary):
     """Base class for all queries."""
